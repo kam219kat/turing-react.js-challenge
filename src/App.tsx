@@ -27,7 +27,7 @@ export default function App() {
       {/* Do not edit test id in below div, it's added for testing purpose */}
       <div data-testid='user-contact-list-wrapper'>
         <UserContactList listId='page' contactList={currentPageList} />
-        {syncError && <p>{syncError}</p>}
+        {syncError && <p className='contactInfoDescriptionWrapper'>{syncError}</p>}
       </div>
       <Paginator
         hasPrevPage={hasPrevPage}
