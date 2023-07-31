@@ -9,6 +9,7 @@ const useContactList = () => {
   const [filteredList, setFilteredList] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [syncError, setSyncError] = useState('');
   const count = useRef(5);
   /**
    * Call next page
@@ -46,21 +47,27 @@ const useContactList = () => {
   /**
    * Call the Bluetooth API and update the list
    */
-  const sync = () => {
+  const sync = async () => {
+    let users;
     setIsSyncing(true);
-    BluetoothSyncAPI.sync().then((user) => {
-      user = user.results.map((r) => ({
+    setSyncError(false);
+    try {
+      data = await BluetoothSyncAPI.sync();
+      users = data, results.map((r) => ({
         name: r.name.first,
         thumbnail: r.picture.thumbnail,
         email: r.email,
         phone: r.phone,
         id: `${r.id.name}-${r.id.value}`,
       }));
-      setList(user);
-      setFilteredList(user);
-      setIsSyncing(false);
-      setOffset(0);
-    });
+    } catch (error) {
+      users = [];
+      setSyncError(true);
+    }
+    setList(users);
+    setFilteredList(users);
+    setIsSyncing(false);
+    setOffset(0);
   };
   /**
    * Return the necessary functions
@@ -90,6 +97,7 @@ const useContactList = () => {
     total: filteredList.length,
     //
     onFilter,
+    syncError,
   };
 };
 
