@@ -50,19 +50,12 @@ const useContactList = () => {
   const sync = async () => {
     let users;
     setIsSyncing(true);
-    setSyncError(false);
+    setSyncError('');
     try {
-      data = await BluetoothSyncAPI.sync();
-      users = data, results.map((r) => ({
-        name: r.name.first,
-        thumbnail: r.picture.thumbnail,
-        email: r.email,
-        phone: r.phone,
-        id: `${r.id.name}-${r.id.value}`,
-      }));
+      users = await BluetoothSyncAPI.sync();
     } catch (error) {
       users = [];
-      setSyncError(true);
+      setSyncError(error.message);
     }
     setList(users);
     setFilteredList(users);
