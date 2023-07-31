@@ -18,12 +18,13 @@ export default function App() {
     page,
     onFilter,
     totalPages,
-    syncError
+    syncError,
+    search
   } = useContactList();
 
   return (
     <div>
-      <Header isSyncing={isSyncing} sync={sync} onFilter={onFilter} />
+      <Header isSyncing={isSyncing} sync={sync} search={search} onFilter={onFilter} />
       {/* Do not edit test id in below div, it's added for testing purpose */}
       <div data-testid='user-contact-list-wrapper'>
         <UserContactList listId='page' contactList={currentPageList} />

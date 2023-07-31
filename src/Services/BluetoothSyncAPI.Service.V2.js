@@ -18,7 +18,7 @@ export default class BluetoothSyncAPIService {
             data.results.forEach((result, index) => {
                 const { picture, name, id, phone, email } = result;
                 const user = {
-                    id: `${id?.name}-${id?.value}`,
+                    id: `${id?.name}-${id?.value}-${index}`,
                     // Check if the thumbnail URL is valid, otherwise set it to null
                     thumbnail: this.URL_PATTERN.test(picture?.thumbnail) ? picture?.thumbnail : null,
                     // Truncate the name to a maximum of 20 characters

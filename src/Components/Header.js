@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Header = ({ isSyncing, sync, onFilter }) => (
+const Header = ({ isSyncing, sync, search, onFilter }) => (
   <div className="contactInfoHeaderWrapper">
     <div>Car Dashboard</div>
     <div>
-      <input onChange={onFilter} />
+      <input onChange={onFilter} value={search}/>
     </div>
     <div>
       <button disabled={isSyncing} onClick={sync}>

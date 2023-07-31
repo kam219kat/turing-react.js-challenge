@@ -10,6 +10,7 @@ const useContactList = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [offset, setOffset] = useState(0);
   const [syncError, setSyncError] = useState('');
+  const [search, setSearch] = useState('');
   const count = useRef(5);
   /**
    * Call next page
@@ -20,6 +21,13 @@ const useContactList = () => {
      * set offset + count
      * update the offest to trigger a re-render
      **/
+    setOffset(offset => {
+      const nextOffset = offset + count.current;
+      if (nextOffset < filteredList.length) {
+        return nextOffset;
+      }
+      return offset;
+    });
   };
   /**
    * Call previous page
@@ -31,17 +39,29 @@ const useContactList = () => {
      * update the offest to trigger a re-render
      *
      */
+    setOffset(offset => {
+      const prevOffset = offset - count.current;
+      if (prevOffset > -1) {
+        return prevOffset;
+      }
+      return offset;
+    });
   };
   /**
    *
    */
-  const onFilter = (term) => {
+  const onFilter = (event) => {
     /**
      * if offset  less count greater than 0
      * set offset - count
      * update the offest to trigger a re-render
      *
      */
+    const value = event.target.value;
+    const filteredList = list.filter(item => [item.name, item.email].some(i => i.includes(value)));
+    setFilteredList(filteredList);
+    setOffset(0);
+    setSearch(value);
   };
 
   /**
@@ -51,6 +71,7 @@ const useContactList = () => {
     let users;
     setIsSyncing(true);
     setSyncError('');
+    setSearch('');
     try {
       users = await BluetoothSyncAPI.sync();
     } catch (error) {
@@ -85,12 +106,13 @@ const useContactList = () => {
     // Current page number
     page: offset > 0 ? offset / count.current : offset,
     // Current page number
-    totalPages: Math.floor(filteredList.length / count.current),
+    totalPages: Math.ceil(filteredList.length / count.current),
     // The total os records
     total: filteredList.length,
     //
     onFilter,
     syncError,
+    search
   };
 };
 
